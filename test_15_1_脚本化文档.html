@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script>
+        //通过ID选取元素
+        var section1 = document.getElementById("section1");
+        /**
+         * This function expects any number of string arguments. It treats each
+         * argument as an element id and calls document.getElementById() for each.
+         * Returns an object that maps ids to the corresponding Element object.
+         * Throws an Error object if any of the ids is undefined.
+         * 函数接受任意多的字符串
+         * 每个参数将当作元素的id传个document.getElementById(id)
+         * 返回一个对象,他把这些id映射到对应的Element对象
+         * 如果任何一个id对应的元素为定义,则抛出一个Error对象
+         */
+        function getElements(/*ids...*/) {
+            var elements = {};                           // Start with an empty map开始是一个空对象
+            for (var i = 0; i < arguments.length; i++) {  // For each argument循环每个参数
+                var id = arguments[i];                   // Argument is an element id参数是元素的id
+                var elt = document.getElementById(id);   // Look up the Element查找元素
+                if (elt == null)                         // If not defined,如果为定义
+                    throw new Error("No element with id: " + id); // throw an error抛出异常
+                elements[id] = elt;                      // Map id to element  id和元素之间的映射
+            }
+            return elements;                             // Return id to element map 对于元素映射返回id
+        }
+
+
+        //通过元素名字选取元素
+        var radiobuttons = document.getElementsByName("favorite_color");//如果是单个则是元素本身,如果是多个则返回一个NodeList
+        console.log("radiobuttons:" + radiobuttons);
+        //通过标签名选取元素//返回一个NodeList对象,不区分大小写,按在文档中的顺序排序的
+        var spans = document.getElementsByTagName("span");//返回一个NodeList对象
+        console.log("spans:" + spans);
+        var eles = document.getElementsByTagName("*");//返回一个代表文档中所有元素NodeList对象
+        console.log("eles *:" + eles);
+        var firstP = document.getElementsByTagName("p")[0];//返回一个NodeList对象,选取第一个<p>元素;
+        console.log("firstP:" + firstP);
+        //        /*查找文档中第一个p元素中所有的span元素*/
+        var firstP2 = document.getElementsByTagName("p")[0];//返回一个NodeList对象,选取第一个<p>元素;
+        //var spanInP = firstP2.getElementsByTagName("span");
+
+
+        ///*通过Css类选取元素*/
+        //查找其class属性值中包含warning的所有元素
+        var warnings = document.getElementsByClassName("warning");
+        //查找以"log"命名并且有"error"和"fatal"类的元素的所有后代
+        //var log = document.getElementById("log");
+        //var fatal = log.getElementsByClassName("fatal error");
+
+        /** ***********************可移植的文档遍历函数**********************************************/
+        /**
+         * Return the nth ancestor of e, or null if there is no such ancestor
+         * or if that ancestor is not an Element (a Document or DocumentFragment e.g.).
+         * If n is 0 return e itself.  If n is 1 (or
+         * omitted) return the parent.  If n is 2, return the grandparent, etc.
+         *
+         * 返回元素e的第n层祖先元素,如果不存在此类祖先或者祖先不是Element
+         * (例如Document or DocumentFragment)则返回null
+         * 如果n为0,则返回e本身,如果n为1(或省略),则返回父元素
+         * 如果n为2,则返回其祖父元素,以此类推
+         */
+        function parent(e, n) {
+            if (n === undefined) n = 1;
+            while (n-- && e) e = e.parentNode;
+            if (!e || e.nodeType !== 1) return null;
+            return e;
+        }
+
+        /**
+         * Return the nth sibling element of Element e.
+         * If n is postive return the nth next sibling element.
+         * If n is negative, return the -nth previous sibling element.
+         * If n is zero, return e itself.
+         * 返回元素的第n个兄弟元素
+         * 如果n为正,返回后续的第n个兄弟元素
+         * 如果n为负,返回前面的第n个兄弟元素
+         * 如果n为0,返回e本身
+         */
+        function sibling(e, n) {
+            while (e && n !== 0) {  // If e is not defined we just return it如果e未定义,即刻返回它
+                if (n > 0) {  // Find next element sibling查找后续的兄弟元素
+                    if (e.nextElementSibling) e = e.nextElementSibling;
+                    else {
+                        for (e = e.nextSibling; e && e.nodeType !== 1; e = e.nextSibling)
+                                /* empty loop */ ;
+                        空循环
+                    }
+                    n--;
+                }
+                else {        // Find the previous element sibling查找前面的兄弟元素
+                    if (e.previousElementSibing) e = e.previousElementSibling;
+                    else {
+                        for (e = e.previousSibling; e && e.nodeType !== 1; e = e.previousSibling)
+                                /* empty loop */ ;
+                        空循环
+                    }
+                    n++;
+                }
+            }
+            return e;
+        }
+
+        /**
+         * Return the nth element child of e, or null if it doesn't have one.
+         * Negative values of n count from the end. 0 means the first child, but
+         * -1 means the last child, -2 means the second to last, and so on.
+         * 返回元素e的第n代子元素,如果不存在则为null
+         * 负值代表从后往前计数,0表示第一个子元素,而-1代表最后一个元素,02代表倒数第二个,以此类推
+         */
+        function child(e, n) {
+            if (e.children) {                      // If children array exists如果children数组存在
+                if (n < 0) n += e.children.length; // Convert negative n to array index转换负的n为数组索引
+                if (n < 0) return null;            // If still negative, no child如果它仍然负,说明没有子元素
+                return e.children[n];              // Return specified child返回指定的子元素
+            }
+
+            // If e does not have a children array, find the first child and count如果e没有children数组,找到第一个子元素并向前书
+            // forward or find the last child and count backwards from there.,或者找到最后一个子元素并往回数
+            if (n >= 0) { // n is non-negative: count forward from the first child   n为非负数:从第一个子元素向前数
+                // Find the first child element of e找到元素e的第一个子元素
+                if (e.firstElementChild) e = e.firstElementChild;
+                else {
+                    for (e = e.firstChild; e && e.nodeType !== 1; e = e.nextSibling)
+                            /* empty */;
+                }
+                return sibling(e, n); // Return the nth sibling of the first child 返回第一个子元素的第n个兄弟元素
+            }
+            else { // n is negative, so count backwards from the end n为负:从最后一个子元素往回数
+                if (e.lastElementChild) e = e.lastElementChild;
+                else {
+                    for (e = e.lastChild; e && e.nodeType !== 1; e = e.previousSibling)
+                            /* empty */;
+                }
+                return sibling(e, n + 1); // +1 to convert child -1 to sib 0 of last   +1 来转化最后1个子元素为最后1个兄弟元素
+            }
+        }
+        /** ***********************可移植的文档遍历函数**********************************************/
+
+
+
+            //        /**/属性
+            //        查询图片的url
+        document.getElementById("myImage");
+
+        //        var image = document.getElementById("myImage");
+        //        var imageUrl = image.src;///src属性石图片的url
+        //        image.id === 'myImage';//判定要查找图片的id
+
+
+        //为form元素设置表单提交的属性
+        //        var f = document.forms[0];//文档中第一个form
+        //        f.action = 'http://www.example.com/submit.php';//设置提交至url
+        //        f.method = "POST";//HTTP请求类型
+
+        //获取和设置属性
+        //        var image = Document.image[0];
+        //        var width = parseInt(image.getAttribute("WIDTH"));
+        //        image.setAttribute("class", "thumbnail");
+
+        //作为Attr节点的属性
+        //        document.body.attributes[0];//body元素的第一个属性
+        //        document.body.attributes.bgcolor;//body元素的bgcolor属性
+        //        document.body.attributes["ONLOAD"];//body元素的onload属性
+
+
+        //元素的内容,纯文本的元素内容
+        //        var para = document.getElementsByTagName("p")[0];//文档中第一个元素<p>;
+        //        var text = para.textContent;//文本内容是"This is a " textContext属性除了IE都支持
+        //        text.textContent = "Hello World!";//修改段落内容
+        /**
+         * 一个参数,返回元素的textContent或innerText
+         * 两个参数,用value参数的值设置元素的textContext或InnerText
+         * */
+        function textContent(element, value) {
+            var content = element.textContent;//检测textContent是否被定义
+            if (content === undefined) {//没传递value.因此返回当前文本
+                if (content !== undefined)return content;
+                else return element.innerText;
+
+            } else {//传递了value,因此设置了文本
+                if (content !== undefined)element.textContent = value;
+                else element.innerText = value;
+            }
+        }
+
+        // Return the plain-text content of element e, recursing into child elements.
+        // This method works like the textContent property
+        /**查找元素的后代中节点中的所有Text元素
+         * 返回元素e的纯文本内容,递归进入其子元素
+         * 该方法的效果类似于textContent属性
+         * */
+        function textContent(e) {
+            var child, type, s = "";  // s holds the text of all children s保存所有子节点的文本
+            for (child = e.firstChild; child != null; child = child.nextSibling) {
+                type = child.nodeType;
+                if (type === 3 || type === 4)  // Text and CDATASection nodes  Text和CDATASelection节点
+                    s += child.nodeValue;
+                else if (type === 1)           // Recurse for Element nodes递归Element节点
+                    s += textContent(child);
+            }
+            return s;
+        }
+
+
+        //        从指定的URL,一步加载和执行脚本
+        function loadAsync(url) {
+            var head = document.getElementsByTagName("head")[0];//查找文档中的<head>标签
+            var s = document.createElement("script");//创建一个<script>元素
+            s.src = url;//设置它的src属性值
+            head.appendChild(s);//将该<script>插入到head中
+
+        }
+
+        //创建节点
+        var newNode = document.createTextNode("text node Content");
+
+        //插入节点
+        //将child节点插入到parent中,使其成为第n个子节点
+        function insertAt(parent, child, n) {
+            if (n < 0 || n > parent.childNodes.length)throw new Error("invalid index");
+            else if (n == parent.childNodes.length)parent.appendChild(child);//appendChild()插入到指定节点的使之成为最后一个节点
+            else parent.insertBefore(child, parent.childNodes[n]);//insertBefore()新节点的前面,第二参数为null个节点插入在最后
+        }
+
+
+        //        表格的排序,没有创建任何新的节点,只是用appendChild()改变已经存在的节点顺序罢了
+        // Sort the rows in first <tbody> of the specified table according to
+        //根据指定表格每行第n个单元格的值,对第一个<tbody>中的进行排序
+        // the value of nth cell within each row. Use the comparator function
+        // if one is specified. Otherwise, compare the values alphabetically.
+        //如果存在Comparator函数这是用它,否则字母表顺序比较
+        function sortrows(table, n, comparator) {
+            var tbody = table.tBodies[0]; // First <tbody>; may be implicitly created第一个<tbody>,可能是隐式创建的
+            var rows = tbody.getElementsByTagName("tr"); // All rows in the tbody tbody中的所有行
+            rows = Array.prototype.slice.call(rows, 0);   // Snapshot in a true array 真时数组中的快照
+
+            // Now sort the rows based on the text in the nth <td> element
+//            基于第n个<td>元素的值对行排序
+            rows.sort(function (row1, row2) {
+                var cell1 = row1.getElementsByTagName("td")[n];  // Get nth cell获得第n个单元格
+                var cell2 = row2.getElementsByTagName("td")[n];  // of both rows两行都是
+                var val1 = cell1.textContent || cell1.innerText; // Get text content获得文本内容
+                var val2 = cell2.textContent || cell2.innerText; // of the two cells两单元格都是
+                if (comparator) return comparator(val1, val2);   // Compare them!进行比较
+                if (val1 < val2) return -1;
+                else if (val1 > val2) return 1;
+                else return 0;
+            });
+
+            // Now append the rows into the tbody in their sorted order.
+            //在tbody中按他们的顺序把行添加到最后
+            // This automatically moves them from their current location, so there
+            //            这将自动把它们从当前位置移走,故没必要预先删除它们
+            // is no need to remove them first. If the <tbody> contains any
+            // nodes other than <tr> elements, those nodes will float to the top.
+            //如果<tbody>还包含了除了<tr>的任何其他元素,这些节点将会悬浮到最顶部位置
+            for (var i = 0; i < rows.length; i++) tbody.appendChild(rows[i]);
+        }
+
+        // Find the <th> elements of the table (assuming there is only one row of them)
+        //查找表格的<th>元素(假设只有一行),让它们可单击
+        // and make them clickable so that clicking on a column header sorts
+        // by that column.
+        //以便单击列标题,按该列对排序
+        function makeSortable(table) {
+            var headers = table.getElementsByTagName("th");
+            for (var i = 0; i < headers.length; i++) {
+                (function (n) {  // Nested funtion to create a local scope嵌套函数来创建本地作用域
+                    headers[i].onclick = function () {
+                        sortrows(table, n);
+                    };
+                }(i));          // Assign value of i to the local variable n将i的值赋给局部变量n
+            }
+        }
+
+
+
+
+
+    </script>
+
+</head>
+<body>
+
+Hello World!!
+
+</body>
+</html>

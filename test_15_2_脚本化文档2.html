@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script>
+        //删除节点
+        var n;
+        //        n.parentNode.removeChild(n);//将在该父节点上调用该方法,并将需要删除的子节点作为方法参数传递给他
+
+        //替换
+        //        n.parentNode.replaceChild(document.createTextNode("[REDACTED]"),n);//用一个文本字符串来替换节点n
+        //用一个新的<b>元素替换n节点,并使n成为该元素的子节点
+        function embolden(n) {
+            //假若参数为字符串而不是节点,将其当作做元素的id
+            if (typeof n == "string")n = document.getElementById(n);
+            var parentNode = n.parentNode;//获得n的父节点
+            var b = document.createElement("b");//创建一个<b>元素
+            parentNode.replaceChild(b, n);//用该<b>元素替换节点b
+            b.appendChild(n);//是n成为<b>元素的子节点
+
+        }
+
+        //使用InnerHTML实现outerHTML属性
+        (function () {
+            // If we already have outerHTML return without doing anything如果outerHTML存在,则直接返回
+            if (document.createElement("div").outerHTML) return;
+
+            // Return the outer HTML of the element referred to by this返回this所this所引用元素的外部HTML
+            function outerHTMLGetter() {
+                var container = document.createElement("div"); // Dummy element虚拟元素
+                container.appendChild(this.cloneNode(true));   // Copy this to dummy复制到该虚拟节点
+                return container.innerHTML;                    // Return dummy content返回虚拟节点的innerHTML
+            }
+
+            // Set the outer HTML of the this element to the specified value用指定的值设置元素的外部HTML
+            function outerHTMLSetter(value) {
+                // Create a dummy element and set its content to the specified value创建一个虚拟元素,设置其内容为指定的值
+                var container = document.createElement("div");
+                container.innerHTML = value;
+                // Move each of the nodes from the dummy into the document将虚拟元素中的节点全部移动到文档中
+                while (container.firstChild)  // Loop until container has no more kids循环,直到container没有子节点为止
+                    this.parentNode.insertBefore(container.firstChild, this);
+                // And remove the node that has been replaced删除所被取代的节点
+                this.parentNode.removeChild(this);
+            }
+
+            // Now use these two functions as getters and setters for the
+            // outerHTML property of all Element objects. Use ES5 Object.defineProperty
+            // if it exists and otherwise fall back on __defineGetter__ and Setter__.
+            if (Object.defineProperty) {
+                Object.defineProperty(Element.prototype, "outerHTML", {
+                    get: outerHTMLGetter,
+                    set: outerHTMLSetter,
+                    enumerable: false, configurable: true
+                });
+            }
+            else {
+                Element.prototype.__defineGetter__("outerHTML", outerHTMLGetter);
+                Element.prototype.__defineSetter__("outerHTML", outerHTMLSetter);
+            }
+        }());
+
+
+        //倒序排列节点n的子节点
+        function reverse(n) {
+            //创建一个DocumentFragment作为临时容器
+            var f = document.createDocumentFragment();
+            /**
+             * 从后至前循环子节点,将每一个自己子节点移动到文档片段中
+             * n的最后一个节点变成f的第一个节点,反之亦然
+             * 注意,给f添加一个节点,该节点自动地会从n中删除
+             * */
+            while (n.lastChild)f.appendChild(n.lastChild);
+
+            //最后,把f的所有子节点一次性全部已回n中
+            n.appendChild(f);
+
+        }
+
+/*** ************************************************************************************/
+        //
+        // This module defines Element.insertAdjacentHTML for browsers that don't
+        // support it, and also defines portable HTML insertion functions that have
+        // more logical names than insertAdjacentHTML:
+        //     Insert.before(), Insert.after(), Insert.atStart(), Insert.atEnd()
+        var Insert = (function () {
+            // If elements have a native insertAdjacentHTML, use it in four HTML
+            // insertion functions with more sensible names.
+            if (document.createElement("div").insertAdjacentHTML) {
+                return {
+                    before: function (e, h) {
+                        e.insertAdjacentHTML("beforebegin", h);
+                    },
+                    after: function (e, h) {
+                        e.insertAdjacentHTML("afterend", h);
+                    },
+                    atStart: function (e, h) {
+                        e.insertAdjacentHTML("afterbegin", h);
+                    },
+                    atEnd: function (e, h) {
+                        e.insertAdjacentHTML("beforeend", h);
+                    }
+                };
+            }
+
+            // Otherwise, we have no native insertAdjacentHTML. Implement the same
+            // four insertion functions and then use them to define insertAdjacentHTML.
+
+            // First, define a utility method that takes a string of HTML and returns
+            // a DocumentFragment containing the parsed representation of that HTML.
+            function fragment(html) {
+                var elt = document.createElement("div");      // Create empty element创建空元素
+                var frag = document.createDocumentFragment(); // Create empty fragment创建空文档片段
+                elt.innerHTML = html;                         // Set element content设置元素内容
+                while (elt.firstChild)                         // Move all nodes移动所有的节点
+                    frag.appendChild(elt.firstChild);         //    from elt to frag从elt到frag
+                return frag;                                  // And return the frag然后返回frag
+            }
+
+            var Insert = {
+                before: function (elt, html) {
+                    elt.parentNode.insertBefore(fragment(html), elt);
+                },
+                after: function (elt, html) {
+                    elt.parentNode.insertBefore(fragment(html), elt.nextSibling);
+                },
+                atStart: function (elt, html) {
+                    elt.insertBefore(fragment(html), elt.firstChild);
+                },
+                atEnd: function (elt, html) {
+                    elt.appendChild(fragment(html));
+                }
+            };
+
+            // Now implement insertAdjacentHTML based on the functions above
+            Element.prototype.insertAdjacentHTML = function (pos, html) {
+                switch (pos.toLowerCase()) {
+                    case "beforebegin":
+                        return Insert.before(this, html);
+                    case "afterend":
+                        return Insert.after(this, html);
+                    case "afterbegin":
+                        return Insert.atStart(this, html);
+                    case "beforeend":
+                        return Insert.atEnd(this, html);
+                }
+            };
+            return Insert;  // Finally return the four insertion function
+        }());
+
+        /*** ************************************************************************************/
+        /**一个自动生成的目录表
+         * TOC.js: create a table of contents for a document.
+         *一个自动生成的目录表
+         * This module registers an anonymous function that runs automatically
+         * when the document finishes loading. When it runs, the function first
+         * looks for a document element with an id of "TOC". If there is no
+         * such element it creates one at the start of the document.
+         *这个模块注册一个可在页面加载完成后自动运行的匿名函数,当执行这个函数时候会去找文档中早id为
+         * "TOC"的元素,如果这个元素不存在,就创建一个元素
+         *
+         *
+         *
+         * Next, the function finds all <h1> through <h6> tags, treats them as
+         * section titles, and creates a table of contents within the TOC
+         * element. The function adds section numbers to each section heading
+         * and wraps the headings in named anchors so that the TOC can link to
+         * them. The generated anchors have names that begin with "TOC", so
+         * you should avoid this prefix in your own HTML.
+         *
+         *
+         *
+         * The entries in the generated TOC can be styled with CSS. All entries have
+         * a class "TOCEntry". Entries also have a class that corresponds to the level
+         * of the section heading. <h1> tags generate entries of class "TOCLevel1",
+         * <h2> tags generate entries of class "TOCLevel2", and so on. Section numbers
+         * inserted into headings have class "TOCSectNum".
+         *
+         * You might use this module with a stylesheet like this:
+         *
+         *   #TOC { border: solid black 1px; margin: 10px; padding: 10px; }
+         *   .TOCEntry { font-family: sans-serif; }
+         *   .TOCEntry a { text-decoration: none; }
+         *   .TOCLevel1 { font-size: 16pt; font-weight: bold; }
+         *   .TOCLevel2 { font-size: 12pt; margin-left: .5in; }
+         *   .TOCSectNum:after { content: ": "; }
+         *
+         * That final line generates a colon and space after section numbers. To hide
+         * the section numbers, use this:
+         * 这段代码的最后一行便是每段编号之后都有一个冒号和空格号,要想隐藏段编号.
+         * 请使用这段代码
+         *
+         *   .TOCSectNum { display: none }
+         *
+         *
+         * This module requires the onLoad() utility function.
+         * 这个模块需要onLoad()工具函数
+         **/
+        onLoad(function () { // Anonymous function defines a local scope匿名函数定义了一个局部作用域
+            // Find the TOC container element.查找TOC元素容器
+            // If there isn't one, create one at the start of the document.如果不存在这在文档开头处创建一个
+            var toc = document.getElementById("TOC");
+            if (!toc) {
+                toc = document.createElement("div");
+                toc.id = "TOC";
+                document.body.insertBefore(toc, document.body.firstChild);
+            }
+
+            // Find all section heading elements查找所有的标题元素
+            var headings;
+            if (document.querySelectorAll) // Can we do it the easy way?
+                headings = document.querySelectorAll("h1,h2,h3,h4,h5,h6");
+            else   // Otherwise, find the headings the hard way否则,查找方法稍微麻烦一些
+                headings = findHeadings(document.body, []);
+
+            // Recursively traverse the document body looking for headings递归遍历document的body,查找标题元素
+            function findHeadings(root, sects) {
+                for (var c = root.firstChild; c != null; c = c.nextSibling) {
+                    if (c.nodeType !== 1) continue;
+                    if (c.tagName.length == 2 && c.tagName.charAt(0) == "H")
+                        sects.push(c);
+                    else
+                        findHeadings(c, sects);
+                }
+                return sects;
+            }
+
+            // Initialize an array that keeps track of section numbers.初始化一个数组来保持跟踪章节号
+            var sectionNumbers = [0, 0, 0, 0, 0, 0];
+
+            // Now loop through the section header elements we found.现在,循环已经找到的标题元素
+            for (var h = 0; h < headings.length; h++) {
+                var heading = headings[h];
+
+                // Skip the section heading if it is inside the TOC container.跳过在TOC中容器的标题元素
+                if (heading.parentNode == toc) continue;
+
+                // Figure out what level heading it is.判断哪个标题的级别
+                var level = parseInt(heading.tagName.charAt(1));
+                if (isNaN(level) || level < 1 || level > 6) continue;
+
+                // Increment the section number for this heading level对于该标题级别增加sectionNumber对应的数字
+                // and reset all lower heading level numbers to zero.重置所有标题比它级别低的数字为零
+                sectionNumbers[level - 1]++;
+                for (var i = level; i < 6; i++) sectionNumbers[i] = 0;
+
+                // Now combine section numbers for all heading levels
+                // to produce a section number like 2.3.1.
+                /** 现在,将所有标题级别的章节号组合产生一个章节号*/
+                var sectionNumber = sectionNumbers.slice(0, level).join(".")
+
+                // Add the section number to the section header title.为标题级别增加章节号
+                // We place the number in a <span> to make it styleable.把数字放在<span>中,使得其可以用样式修饰
+                var span = document.createElement("span");
+                span.className = "TOCSectNum";
+                span.innerHTML = sectionNumber;
+                heading.insertBefore(span, heading.firstChild);
+
+                // Wrap the heading in a named anchor so we can link to it.用命名的锚点将标题包起来,以便为它增加链接
+                var anchor = document.createElement("a");
+                anchor.name = "TOC" + sectionNumber;
+                heading.parentNode.insertBefore(anchor, heading);
+                anchor.appendChild(heading);
+
+                // Now create a link to this section.现在该为该节创建一个链接
+                var link = document.createElement("a");
+                link.href = "#TOC" + sectionNumber; // Link destination链接的目标地址
+                link.innerHTML = heading.innerHTML; // Link text is same as heading链接文本与实际标题一致
+
+                // Place the link in a div that is styleable based on the level.
+                //将链接放在一个div中,div用基于级别名字的样式修饰
+                var entry = document.createElement("div");
+                entry.className = "TOCEntry TOCLevel" + level;
+                entry.appendChild(link);
+
+                // And add the div to the TOC container.将DIV添加到TOC容器中
+                toc.appendChild(entry);
+            }
+        });
+
+    </script>
+
+</head>
+<body>
+
+Hello World!!
+
+</body>
+</html>

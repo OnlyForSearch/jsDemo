@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+
+    <script>
+
+        //查询窗口滚动条的的位置
+        // Return the current scrollbar offsets as the x and y properties of an object
+        //以一个对象x和y属性的方式的方式滚动条的偏移量
+        function getScrollOffsets(w) {
+            // Use the specified window or the current window if no argument使用指定的窗口,如果不带参数则使用当前窗口
+            w = w || window;
+
+            // This works for all browsers except IE versions 8 and before除了IE8及更早的版本以外,其他浏览器都能用
+            if (w.pageXOffset != null) return {x: w.pageXOffset, y: w.pageYOffset};
+
+            // For IE (or any browser) in Standards mode对标准模式下得IE(任何浏览器)
+            var d = w.document;
+            if (document.compatMode == "CSS1Compat")
+                return {x: d.documentElement.scrollLeft, y: d.documentElement.scrollTop};
+
+            // For browsers in Quirks mode对怪异模式下的浏览器
+            return {x: d.body.scrollLeft, y: d.body.scrollTop};
+        }
+        /*** ************************************************************************************/
+
+
+        //查询窗口的视口尺寸:为了确定文档的那些部分是可以使用的
+        // Return the viewport size as w and h properties of an object
+        //作为一个对象的w和h属性返回视口的尺寸
+        function getViewportSize(w) {
+            // Use the specified window or the current window if no argument
+//            除了IE8及更早的版本以外,其他浏览器都能用
+            w = w || window;
+
+            // This works for all browsers except IE8 and before
+            if (w.innerWidth != null) return {w: w.innerWidth, h: w.innerHeight};
+
+            // For IE (or any browser) in Standards mode对标准模式下得IE(任何浏览器)
+            var d = w.document;
+            if (document.compatMode == "CSS1Compat")        return {
+                w: d.documentElement.clientWidth,
+                h: d.documentElement.clientHeight
+            };
+
+            // For browsers in Quirks mode对怪异模式下的浏览器
+            return {w: d.body.clientWidth, h: d.body.clientWidth};
+        }
+
+
+        /*** ************************************************************************************/
+        //判断一个元素的尺寸和位置的最简单的方法//
+        // var box=e.getBoundingClientRect();//获得在视口坐标中的位置
+        //      var offSets=  getScrollOffsets();//上面定义的工具函数
+        //        var x=box.left+offSets.x;//转化为文档坐标
+        //        var y=box.top+offSets.y;//转化为文档坐标
+
+        ///*简单实现width和height*/
+        // var box=e.getBoundingClientRect();//获得在视口坐标中的位置
+        //
+        //        var x=box.width||(box.right-box.left);//转化为文档坐标
+        //        var h=box.height||()box.bottom-box.top);//转化为文档坐标
+        //        var y=box.top+offSets.y;//转化为文档坐标
+
+
+        /*** ************************************************************************************/
+
+        //offsetLeft和offsetTop来计算元素e的位置
+        function getElementPosition(e){
+            var x= 0,y=o;
+            while(e!=null){
+                x+=e.offsetLeft;
+                y+=e.offsetTop;
+                e=e.offsetParent;
+            }
+            return {x: x, y: y};
+        }
+
+
+    </script>
+
+</head>
+<body>
+
+Hello World!!
+
+</body>
+</html>

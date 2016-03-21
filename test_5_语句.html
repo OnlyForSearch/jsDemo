@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+        //"use strict"//表示后续代码将会解析为严格代码(strict code)
+        var x = Math.PI;
+        var number = Math.cos(x);
+        console.log(number);
+
+        // 声明语句
+        //  1 var 声明的变量无法用delete删除
+        var i;
+        var j = 0;
+        var p, q;
+        var greeting = "hello " + j;
+        var x = 2.34, y = Math.cos(.75), r, theta;
+        var x = 2, y = x * x;
+        var x = 2, f = function (x) {
+                    return x
+                },
+                y = f(x);
+        for (var i = 0; i < 10; i++)console.log(i);
+        for (var i = 0, j = 10; i < 10; i++, j--)console.log(i * j);
+
+        for (var i in greeting)console.log(i);
+        //        2function
+        var f = function (x) {
+            return x + 1
+        }//将表达式的赋值给一个变量
+        function f(x) {
+            return x + 1;
+        }//含有表达式名称的语句
+        function factorial(n) {//递归 函数
+            if (n <= 1)return 1;
+            return n * factorial(n - 1);
+        }
+
+        //  5.4条件语句
+        var username;
+        function ifDemo() {
+//            如果username不是null,undefined,false,0,""或者NaN,那么赋值
+            if (!username) {
+                username = "JOhn Doe";
+                console.log(username);
+            }
+//if else
+            i = j = 1;
+            k = 2;
+            if (i == j) {
+                if (j == k)
+                    console.log("i equal k");
+                else
+                    console.log("i don't equal j");
+            }
+
+        }
+        ifDemo();
+
+        function switchDemo() {
+            //这里case使用===比较的
+            var n = 6;
+            switch (n) {
+                case 1:
+                    console.log("1");
+                    break;
+                case 2:
+                    console.log("2");
+                    break;
+                case 3:
+                    console.log("3");
+                    break;
+                default://如果没有default将跳过所有点代码;
+                    console.log("default");
+                    break;
+            }
+//            更贴近实战的例子,根据值得类型将该值转换为字符串
+            switch (typeof n) {
+                case 'number':
+                    return x.toString(16);//返回将数字转化为16进制
+                case 'string':  //返回两端带有""的字符串
+                    return '"' + n + '"';
+                default://使用普通方法转换其他类型
+                    return String(x)
+
+            }
+
+        }
+        console.log(switchDemo());
+
+        //**//循环
+        function whileDemo() {
+            var count = 0;
+            while (count < 10) {
+                console.log(count);
+                count++;
+            }
+        }
+        whileDemo();
+        ///**/打印数组
+        function printArray(a) {
+            var len = a.length, i = 0;
+            if (len == 0) {
+                console.log("Empty Array");
+            } else {
+                do {
+                    console.log(a[i]);
+                } while (++i < len);
+            }
+        }
+        var a = [1, 2, 3, 4,];
+        printArray(a);
+        ///**/遍历链表,返回链表的最后一个对象
+        function tail(o) {
+            for (; o.next; o = o.next)/*empty*/;
+            return o;
+        }
+
+        ///**/抛出异常
+        function throwDemo(x) {
+            if (x < 0)throw new Error("x不能是负数");//抛出异常javaScript会立即停止当前执行的逻辑,并跳转到就近的异常处理程序
+            for (var f = 1; x > 1; f *= x, x--) /*empty*/;
+            return f;
+        }
+        throwDemo(1);
+        function tryCatchFinallyDemo() {//关于try catch实际的例子
+            //javascript prompt()和alert()来输入和输出
+            try {
+                var n = Number(prompt("请输入一个正整数", ""));
+                var f = factorial(n);
+                //显示结果
+                alert(n + "!=" + f)
+
+            } catch (ex) {
+                //如果输入不合法,执行这里
+                alert(ex);//告诉用户产生了什么错误
+            }
+            ;
+
+        }
+        tryCatchFinallyDemo();
+
+        var too = function () {
+            try {
+                throw new Error('不会被处理的异常')
+            } finally {
+                return 1;//未处理异常将直接返回,这里正常返回
+            }
+        }
+        console.log(too());
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

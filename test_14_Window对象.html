@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script>
+
+        /* 定时器应用函数
+         * Schedule an invocation or invocations of f() in the future.
+         * Wait start milliseconds, then call f() every interval milliseconds,
+         * stopping after a total of start+end milliseconds.
+         * If interval is specified but end is omitted, then never stop invoking f.
+         * If interval and end are omitted, then just invoke f once after start ms.
+         * If only f is specified, behave as if start was 0.
+         * Note that the call to invoke() does not block: it returns right away.
+         *
+         * 安排函数f()在未来的调用模式
+         * 在等待若干秒之后调用f()
+         * 如果设置了interval和end,只在若干秒后调用f()一次
+         * 只有指定了f(),才会从start=0时刻开始
+         * 注意,调用invoke()不会阻塞,他会立即返回
+         */
+        function invoke(f, start, interval, end) {
+            if (!start) start = 0;          // Default to 0 ms默认设置为0毫秒
+            if (arguments.length <= 2)      // Single-invocation case单次调用模式
+                setTimeout(f, start);       // Single invocation after start ms.若干毫秒之后的单词调用模式
+            else {                          // Multiple invocation case多次调用模式
+                setTimeout(repeat, start);  // Repetitions begin in start m在若干秒后调用repeate()
+                function repeat() {         // Invoked by the timeout above在上一行所示的setTimeout()中调用
+                    var h = setInterval(f, interval); // Invoke f every interval ms.循环调用f()
+                    // And stop invoking after end ms, if end is defined在end毫秒后停止调用,前提end已经定义了
+                    if (end) setTimeout(function () {
+                        clearInterval(h);//用于取消setInterval函数的执行
+                    }, end);
+                }
+            }
+        }
+
+
+        /*提取URL的搜索字符串中的参数
+         * This function parses ampersand-separated name=value argument pairs from
+         * the query string of the URL. It stores the name=value pairs in
+         * properties of an object and returns that object. Use it like this:
+         *这个函数用来解析来自URL的查询串中的name=value参数对
+         * 它将name=value对存储在一个对象属性中,并返回该对象
+         * 这样来使用它:
+         *
+         * var args = urlArgs();  // Parse args from URL从URL解析参数
+         * var q = args.q || "";  // Use argument, if defined, or a default value如果这个参数定义了的话使用参数,否则使用一个默认值
+         * var n = args.n ? parseInt(args.n) : 10;
+         *
+         *
+         */
+        function urlArgs() {
+            var args = {};                             // Start with an empty object定义一个空对象
+            var query = location.search.substring(1);  // Get query string, minus '?'.查找到查询串,并去掉'?'location.search返回问号之后的URL,通常是魔宗查询字符串
+            var pairs = query.split("&");              // Split at ampersands根据"&"符号将查询字符串分隔开
+            for (var i = 0; i < pairs.length; i++) {    // For each fragment对于每个片段
+                var pos = pairs[i].indexOf('=');       // Look for "name=value"查找name=value
+                if (pos == -1) continue;               // If not found, skip it如果没有找到的话就跳过
+                var name = pairs[i].substring(0, pos);  // Extract the name提取name
+                var value = pairs[i].substring(pos + 1); // Extract the value提取value
+                value = decodeURIComponent(value);     // Decode the value对value进行解码
+                args[name] = value;                    // Store as a property存储为属性
+            }
+            return args;                               // Return the parsed arguments返回解析后的参数
+        }
+
+        //        使用navigator.userAgent来调整浏览器嗅探,判断浏览器类型
+        // Define browser.name and browser.version for client sniffing, using code
+        // derived from jQuery 1.4.1. Both the name and number are strings, and both
+        // may differ from the public browser name and version. Detected names are:
+        //
+        //   "webkit": Safari or Chrome; version is WebKit build number
+        //   "opera": the Opera browser; version is the public version number
+        //   "mozilla": Firefox or other gecko-based browsers; version is Gecko version
+        //   "msie": IE; version is public version number
+        //
+        // Firefox 3.6, for example, returns: { name: "mozilla", version: "1.9.2" }.
+        var browser = (function () {
+            var s = navigator.userAgent.toLowerCase();
+            var match = /(webkit)[ \/]([\w.]+)/.exec(s) ||
+                    /(opera)(?:.*version)?[ \/]([\w.]+)/.exec(s) ||
+                    /(msie) ([\w.]+)/.exec(s) ||
+                    !/compatible/.test(s) && /(mozilla)(?:.*? rv:([\w.]+))?/.exec(s) ||
+                    [];
+            return {name: match[1] || "", version: match[2] || "0"};
+        }());
+
+        console.log(browser);
+
+        //对话框展示
+        do{
+            var name=prompt("what is your name");//得到一个字符串输入
+            var correct=confirm("you entered '"+name+"'.\n"+"确认或者取消");//得到一个布尔值
+
+        }while(!correct);
+        alert("Hello,"+name);//输入一个纯文本消息
+
+;
+        //错误 处理,在开发阶段来显式通知,在一个对话框中弹出错误消息,但不超过3次
+        window.onerror= function (msg, url, line) {
+            if(onerror.num++< onerror.max){
+                alert("Error:"+msg+"\n"+url+":"+line);
+            }
+        }
+
+        onerror.max = 3;
+        onerror.num = 0
+
+
+        //打开和关闭新窗口
+        var w=window.open("smallwin.html",'smallwin','width=400,height=350,status=yes,resizable=yes');
+
+
+    </script>
+</head>
+<body>
+
+
+        <button onclick="cancel()">关闭窗口</button>
+
+        <script>
+            function cancel() {
+                window.close();//ie有效
+            }
+
+        </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="JSON-js-master/json2.js"></script>
+    <script>
+        //"use strict"//表示后续代码将会解析为严格代码(strict code)
+        ///**/      创建对象
+        //1直接量
+        var empty = {};
+        var point = {x: 0, y: 0};
+        var point2 = {x: point.x, y: point.y + 1};
+        var book = {
+            "main title": "JavaScript",
+            "sub-title": "The JavaScript",//属性名字中有连字符'-',必须用字符串表示
+            "for": "all audience",//for是关键字必须用引号
+            author: {
+                first: "David",
+                surname: "Flanagan"
+            }
+        };
+
+        //        通过原型创建对象ECMAScript5
+        //一个用途防止库函数无意间修改不受你控制的对象
+        function inherit(p) {
+            if (p == null)throw TypeError();//p是一个对象,但是不能是null
+            if (Object.create)//如果Object.create()存在
+                return Object.create(p);//直接使用她
+            var t = typeof p;
+            if (t !== "object" && t !== "function")throw TypeError();
+            function f() {
+            };//定义一个空构造函数
+            f.prototype = p;//将其原型设置为p;
+            return new f();//使用f()创建p的继承对象
+
+
+        }
+
+
+        //2new创建对象
+        var a = new Array();//创建一个空数组相当于[]
+        var d = new Date();//当前时间的对象
+        var r = new RegExp("js");//正则对象
+
+        //3属性设置
+        var author = book.author;
+        var name = author.surname;
+        var title = book["main title"];
+        //设置属性
+        book.edition = 6;
+        book["main title"] = "ESCScript";
+        console.log(book);
+
+        //3属性访问错误,访问到不存在的属性
+        //        var book.subtitle.length;//访问了不存在的属性
+        //防止方法(冗余的写法)
+        var len = undefined;
+        if (book) {
+            if (book.subtitle)len = book.subtitle.length;
+        }
+        //防止方法(精炼的写法)
+        var len = book && book.subtitle && book.subtitle.length;//短路行为
+        console.log(len);
+
+
+        //        删除属性
+        o = {x: 1};
+        delete o.x;//true
+        delete o.x;//true
+        delete  o.toString;//true
+        delete 1;//true
+        delete Object.prototype;//false
+        var x = 1;
+        delete this.x;//false
+        function hd() {
+        }//false
+        delete this.hd;//false
+        this.det = 1;
+        delete det;//true
+
+        ///**/检测属性1
+        var oP = {x: 1};
+        "x" in oP;//true;
+        "y" in oP;//false;
+        "toString" in oP;////true
+        ///**/检测属性2简单的方法
+        var op2 = {x: 2, z: undefined};
+        o.x !== undefined;//true
+        o.y !== undefined;//false
+        o.toString !== undefined;//ture;
+        o.z !== undefined;//false;
+
+        ///*用来枚举属性的对象工具函数库*********开始**********************************************/
+        /*
+         * 把p中的可枚举属性复制到o,并返回o
+         * 如果o和P中含有同名属性,则覆盖到o中的的属性
+         * 这个函数并不处理getter和setter以及复制属性
+         */
+        function extend(o, p) {
+            for (prop in p) {                         // 遍历p中的所有属性
+                o[prop] = p[prop];                   // Add the property to o.
+            }
+            return o;
+        }
+
+        /*
+         * 把p中的可枚举属性复制到o,并返回o
+         * 如果o和P中含有同名属性,o的属性不受到影响
+         * 这个函数并不处理getter和setter以及复制属性      */
+        function merge(o, p) {//合并
+            for (prop in p) {                           // For all props in p.
+                if (o.hasOwnProperty[prop]) continue;  // Except those already in o.
+                o[prop] = p[prop];                     // Add the property to o.
+            }
+            return o;
+        }
+
+        /*
+         * 如果o中的属性在p中没有存在,则从o中删除还这个属性,返回o
+         */
+        function restrict(o, p) {
+            for (prop in o) {                         // For all props in o
+                if (!(prop in p)) delete o[prop];    // Delete if not in p
+            }
+            return o;
+        }
+
+        /*
+         * For each property of p, delete the property with the same name from o.
+         * Return o.
+         * 如果o中的属性在p中存在,则从o中删除还这个属性,返回o
+
+         */
+        function subtract(o, p) {
+            for (prop in p) {                         // For all props in p
+                delete o[prop];                      // Delete from o (deleting a
+                                                     // nonexistent prop is harmless)
+            }
+            return o;
+        }
+
+        /*
+         * Return a new object that holds the properties of both o and p.
+         * If o and p have properties by the same name, the values from o are used.
+         * 返回一个新对象,这个对象同时拥有o的属性和p的属性,如果o和p有重名属性,则使用
+         * p中的属性
+         */
+        function union(o, p) {
+            return extend(extend({}, o), p);
+        }
+
+        /*
+         * Return a new object that holds only the properties of o that also appear
+         * in p. This is something like the intersection of o and p, but the values of
+         * the properties in p are discarded
+         * 返回一个新对象,这个对象同时拥有o的属性和p的属性,很像求o和p的交集,但是p的属性
+         * 被忽略掉了
+         */
+        function intersection(o, p) {
+            return restrict(extend({}, o), p);
+        }
+
+        /*
+         * Return an array that holds the names of the enumerable own properties of o.
+         *返回一个数组,这个数组包含的是o中可枚举的自有属性的名字
+         */
+        function keys(o) {
+            if (typeof o !== "object") throw TypeError();  // Object argument required
+            var result = [];                 // The array we will return
+            for (var prop in o) {             // For all enumerable properties遍历可以枚举属性
+                if (o.hasOwnProperty(prop))  // If it is an own property判断是否是自有属性
+                    result.push(prop);       // add it to the array.
+            }
+            return result;                   // Return the array.
+        }
+        ///*用来枚举属性的对象工具函数库*******************************结束************************/
+
+
+        //对象序列化:将对象的状态转化为字符串,也可以将字符串还原为对象
+        o = {x: 1, y: {z: [false, null, ""]}};
+        console.log(s=JSON.stringify(o));
+        console.log(p = JSON.parse(s));
+        console.log("Date.toJSON():"+new Date().toJSON())
+
+
+
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>

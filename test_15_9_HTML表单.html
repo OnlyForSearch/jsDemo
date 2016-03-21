@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>标题</title>
+
+
+</head>
+<body>
+
+<form name="shipping">
+    <fieldset>
+        <legend></legend>
+        <label><input type="radio" name="method" value="1st" />First-class</label>
+        <label><input type="radio" name="method" value="2day" />2-day</label>
+        <label><input type="radio" name="method" value="overnite" />Overnight</label>
+        <br /> <select name="country" id=""></select>
+    </fieldset>
+</form>
+    <div id="address">
+        <input type="text" />
+    </div>
+
+    <div id="editor" contenteditable>
+        点击编辑
+    </div>
+
+Hello World!!
+
+
+<form action="" onreset="return confirm('返回确定?')">
+    <button type="reset">清空</button>
+</form>
+
+<script>
+
+    document.getElementById("address").getElementsByTagName("input");
+
+    //id为"shipping"的表单中所有的单选按钮
+    document.querySelectorAll('#shipping input[type="radio"]')
+    //id为"shipping"的表单中所有名字为"method"的单选按钮
+    document.querySelectorAll('#shipping input[type="radio"][name="method"]');
+
+
+    //选取方法:有name或id属性的<form>元素
+    window.address;//不可靠,不要使用
+    document.address;//仅当表单有name属性时可用
+    document.forms.address;//显式访问有name或id得表单
+    //         document.forms[n];//不可靠:n是表单的序号
+
+
+    //获取名为"address"的表单的第一个元素的name是"street"
+    //            document.forms.address[0];
+    //            document.forms.address.street;
+    //            document.address.street;//当有name="address",而不是只有id="address"
+
+    //明确选取一个表单元素
+    //    document.forms.address.elements[0];
+    //    document.forms.address.elements.street;
+
+    //获取单选按钮元素数组
+    var methods = document.forms.shipping.elements.method;
+
+
+    //    /*遍历数组中的表单元素并检测他们的checked属性*/
+    var shipping_method;
+    for (var i = 0; i < methods.length; i++) {
+        if (methods[i].checked)shipping_method = methods[i].value;
+    }
+    console.log(shipping_method);
+
+
+    //选择框select和Option
+    var zaire = new Option(//用Option()函数构造一个Option对象
+            "zaire",//text属性
+            "zaire",//value属性
+            false,//defaultSelected属性
+            false//selected属性
+    );
+    //通过添加到options数组中,在Select元素中显示该选项
+    var countries = document.shipping.country;//得到Select对象
+    countries.options[countries.options.length] = zaire;
+
+
+    /** *******************************************************************************************/
+
+
+
+    document.write("<p>Document title:" + document.title);
+    document.write("<p>url:" + document.URL);
+    document.write("<p>Referred by:" + document.referrer);
+    document.write("<p>Modified on:" + document.lastModified);
+    document.write("<p>Accessed on:" + new Date());
+
+    /** ***************************************针对innerHTML属性的流式API***********************************/
+    // Define a simple "streaming" API for setting the innerHTML of an element.
+//    未设置元素的InnerHTML定义简单的"流式"API
+    function ElementStream(elt) {
+        if (typeof elt === "string") elt = document.getElementById(elt);
+        this.elt = elt;
+        this.buffer = "";
+    }
+
+    // Concatenate all arguments and append to the buffer
+    //连接所有的参数,添加到缓存中
+    ElementStream.prototype.write = function () {
+        this.buffer += Array.prototype.join.call(arguments, "");
+    };
+
+    // Just like write(), but add a newline
+//    类似writer(),只是多增加量换行符
+    ElementStream.prototype.writeln = function () {
+        this.buffer += Array.prototype.join.call(arguments, "") + "\n";
+    };
+
+    // Set element content from buffer and empty the buffer.
+    //从缓存中设置元素的内容,然后清空缓存
+    ElementStream.prototype.close = function () {
+        this.elt.innerHTML = this.buffer;
+        this.buffer = "";
+    };
+    /** *******************************************************************************************/
+    //查询选取的文本
+    function getSelectedTest(){
+            if(window.getSelection)//HTML5标准API
+                        return window.getSelection().toString();
+            else if(document.selection)//IE特有的技术
+                return document.selection.createRange().text;
+
+    }
+
+
+</script>
+</body>
+</html>

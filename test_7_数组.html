@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+    <script src="JSON-js-master/json2.js"></script>
+    <script>
+        //创建数组
+        var empty = [];
+        var primes = [1, 2, 3, 4, 5];
+        var misc = [1.1, true, "a", 1,];
+        var base = 1024;
+        var table = [base, base + 1, base + 2, base + 3];
+        var b = [[1, {x: 1, y: 2}], [2, {x: 3, y: 5}]];
+        var count = [1, , 3];//有3个元素,中间元素值为undefined
+        var undefs = [, ,];//有2个元素,都是undefined
+        //构造器创建数组
+        var a = new Array();//
+        var a = new Array(10);//指定长度为10;
+        //var a = new Array { 5, 4, 3, 2, 1, "testing, testing" } ;
+        //读和写
+        var a = ["world"];
+        var value = a[0];
+        a[1] = 3.12;
+        i = 2;
+        a[i] = 3;
+        a[i + 1] = "Hello";
+        console.log(a[a[i]] = a[0]);
+
+
+        //数组长度
+        console.log([].length);
+        console.log(['a', 'b', 'c'].length);
+        a = [1, 2, 3, 4, 5, 6];
+        console.log(a);
+        a.length = 3;//大于长度的元素将被删除
+        console.log(a);
+        a.length = 0;
+        console.log(a);
+        a.length = 5;
+        console.log(a);
+
+
+        //        数组元素的添加和删除
+        a = [];
+        console.log(a[0] = "zero");
+        console.log(a[1] = 'one');
+        a = [];
+        a.push("one");//在数组末尾添加一个或者多个元素
+        console.log(a);
+        a.push("one", "two");//在数组末尾添加一个或者多个元素
+        console.log(a);
+
+        //删除元素
+        a = [1, 2, 3, 5, 6, 7];
+        console.log(a);
+        delete  a[1];
+        console.log(a);
+        console.log(1 in a);
+        console.log(a.length);
+
+        console.log(a);
+        console.log(a.pop());//一次减少长度1并返回上次元素的值
+        console.log(a);
+
+        //数组遍历
+        var keys = Object.keys(new Date);
+        var values = [];
+        for (var i = 0, len = keys.length; i < len; i++) {
+            var key = keys[i];
+            value[i] = a[key];
+        }
+
+        //***************验证元素的合法性*/
+        for (var i = 0; i < a.length; i++) {
+            if (!a[i])continue;//跳过null,undefined,和不存在的元素
+
+        }
+        for (var i = 0; i < a.length; i++) {
+            if (a[i] === undefined)continue;//跳过undefined,和不存在的元素
+
+        }
+        for (var i = 0; i < a.length; i++) {
+            if (!(i in a))continue;//跳过不存在的元素
+
+        }
+
+        //       不存在的索引将不会遍历到
+        for (var index in a) {
+            var value = a[index];
+        }
+
+        for (var i in a) {
+            //跳过不是非负整数的i;
+            if (String(Math.floor(Math.abs(Number(i)))) != 1)continue;
+        }
+
+        //ECMA5定义了一些遍历数组元素的新方法,按照索引的顺序按个传播给定义的一个函数,函数式编程风格
+        var data = [1, 2, 3, 4, 5, 6];
+        var sumOfSquares = 0;//要得到的数据的平方和;
+        data.forEach(function (x) {//把每个元素传递给此函数
+            sumOfSquares += x * x;
+        });
+        console.log(sumOfSquares);
+
+
+        //多维数组
+        var table = new Array(20);//表格有20行
+        for (var i = 0; i < table.length; i++) {
+            table[i] = new Array(10);//每行有10列
+        }
+        //初始化数组
+        for (var row = 0; row < table.length; row++) {
+            for (var col = 0; col < table[row].length; col++) {
+                table[row][col] = row * col;
+
+            }
+        }
+        console.log(table);
+        var product = table[5][7];
+        console.log(product);
+
+        //数组的方法
+        var a = [1, 2, 3];
+        a.join();
+        console.log(a);
+
+        a.join(" ");//生成字符串,将元素用指定符号连接起啦
+        console.log(a.join(" "));
+        console.log(a.join(""));
+        console.log(a.join("-"));
+        console.log(a.reverse().join("-"));//a.reverse()反转数组
+
+        var a = new Array("banana", "cherry", undefined, "apple");
+        console.log(a.sort());//字母顺序排序,数值也是
+        var a = [33, 4, 11, 22];
+        console.log(a.sort());//字母表顺序
+        var a = [33, 4, 11, 22];
+        console.log(a.sort(function (a, b) {//使用匿名函数
+            return a - b;////根据顺序,返回负数,0,正数
+        }));//数值顺序
+        var a = [33, 4, 11, 22];
+        console.log(a.sort(function (a, b) {
+            return b - a;
+        }));//数值大小相反的顺序
+
+        a = ['ant', 'Bug', 'cat', 'Dog'];
+        console.log(a.sort());//区分大小排序
+        a = ['ant', 'Bug', 'cat', 'Dog'];
+        a.sort(function (s, t) {//不区分大小
+            var a = s.toLowerCase();
+            var b = t.toLowerCase();
+            if (a < b)return -1;
+            if (a > b)return 1;
+            return 0;
+
+        });
+        console.log(a);//不区分大小
+
+        var a = [1, 2, 3];
+        console.log(a.concat(4, 5));//不会修改调用数组,返回一个新数组
+        console.log(a.concat([4, 5]));
+        console.log(a.concat([4, 5], [6, 7]));
+        console.log(a.concat(4, [5, [6, 7]]));// [1, 2, 3, 4, 5, [6, 7]]
+        console.log(a);
+
+        var a = [1, 2, 3, 4, 5];
+        console.log(a.slice(0, 3));// [1, 2, 3]
+        console.log(a.slice(3));//[4, 5]
+        console.log(a.slice(1, -1));// -1表示指定了最后一个元素[2, 3, 4]
+        console.log(a.slice(-3, -2));// -3指定倒数第3个[3]
+        console.log(a);//不修改数组
+
+
+        var a = [1, 2, 3, 4, 5, 6, 7, 8];
+        console.log(a.splice(4));//删除元素
+        console.log(a.splice(1, 2));
+        console.log(a.splice(1, 1));
+        console.log(a);
+        var a = [1, 2, 3, 4, 5];
+        console.log(a.splice(2, 0, 'a', 'b'));// []
+        console.log(a.splice(2, 2, [1, 2], 3));// ["a", "b"]前两个参数表述需要删除的元素,随后的参数表示需要插入的数组中的元素
+        console.log(a);
+
+        //数组当作栈使用push,pop
+        var stack = [];
+        console.log(" //数组当作栈使用push,pop");
+        console.log(stack.push(1, 2));//返回数组新长度
+        console.log(stack.pop());//返回被删除的值
+        console.log(stack.push(3));
+        console.log(stack.pop());
+        console.log(stack.push([4, 5]));
+        console.log(stack.pop());
+        console.log(stack.pop());
+        console.log(stack);
+        //unshift,shift
+        var a = [];
+        console.log(a.unshift(1));
+        console.log(a.unshift(22));
+        console.log(a.shift());
+        console.log(a.unshift(3, [4, 5]));
+        console.log(a.shift());
+        console.log(a.shift());
+        console.log(a.shift());
+        console.log(a);
+        console.log([1, 2, 3]);
+        console.log([1, 2, 3].toString());
+        console.log(a);
+        console.log(a);
+        console.log(a);
+
+        //        /*ECMAScript5中的数组方法*/
+        // 1 forEach()
+        var data = [1, 2, 3, 4, 5];
+        var sum = 0;
+        data.forEach(function (value) {
+            sum += value;
+        });
+        console.log(sum);
+
+        data.forEach(function (v, i, a) {//3个参数,v数组元素,i数组索引,a数组本身
+            a[i] = v + 1;
+        });
+        console.log(data);
+
+        //要提前终止的foreach的方法
+        function foreach(a, f, t) {
+            try {
+                a.forEach(f, t);
+            } catch (e) {
+                if (e === foreach.break)return;
+                else
+                    throw e;
+
+            }
+        }
+        foreach.break = new Error("StopIteration");
+
+        //    2 map()//
+        a = [1, 2, 3];
+        b = a.map(function(x){//元素处理
+            return x*x;
+        });
+        console.log(b);
+
+        //3 filter
+        a = [5, 4, 3, 2, 1];
+        var smallValues = a.filter(function (x) {//返回符合条件的元素子集
+            return x < 3
+        });
+        console.log(smallValues);
+        var everyOther = a.filter(function (x, i) {//返回符合条件的元素子集
+            return i % 2 == 0;
+        });
+        console.log(everyOther);
+
+            //压缩稀疏数组的空缺
+        var dense = a.filter(function () {
+            return true;
+        });
+        //压缩稀疏数组的空缺,并说出undefined和null
+        a = a.filter(function (x) {
+            return x!==undefs&&x!=null;
+        });
+        console.log(a);
+
+
+        //判断是否是数组
+        var isArray=Function.isArray||function(o) {
+                    return typeof o === "object"&&Object.prototype.toString().call(o)==="[object Array]";
+                };
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
