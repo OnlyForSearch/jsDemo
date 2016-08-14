@@ -62,7 +62,7 @@
         timer = setTimeout(function() {
           checkScrollPosition();
           timer = 0;
-        }, 250);
+        }, 250);//设置节流方案,避免不必要的计算
       }
     }).trigger('scroll');
   });

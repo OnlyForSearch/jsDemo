@@ -20,7 +20,7 @@ $(document).ready(function() {
 
   $('div.photo').on('mouseenter mouseleave', function(event) {/*可以为mouseenter和mouseleave绑定同一个处理 程序，只在两个事件名称之间加一个空格即可*/
     var $details = $(this).find('.details');
-    if (event.type == 'mouseenter') {
+    if (event.type == 'mouseenter') {//事件的类型
       $details.fadeTo('fast', 0.7);
     } else {
       $details.fadeOut('fast');

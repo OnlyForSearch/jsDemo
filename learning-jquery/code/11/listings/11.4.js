@@ -1,6 +1,6 @@
 $(document).ready(function() {
   $('#fx-toggle').show().on('click', function() {
-    $.fx.off = !$.fx.off;
+    $.fx.off = !$.fx.off;//关闭动画
   });
 
   $('div.member').on('mouseenter mouseleave', function(event) {

@@ -1,5 +1,5 @@
 (function($) {
-  $.event.special.throttledScroll = {
+  $.event.special.throttledScroll = {//扩展事件
     setup: function(data) {
       var timer = 0;
       $(this).on('scroll.throttledScroll', function(event) {

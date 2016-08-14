@@ -36,7 +36,7 @@
   $(document).ready(function() {
     $('#more-photos').click(function(event) {
       event.preventDefault();
-      $(this).trigger('nextPage');
+      $(this).trigger('nextPage');//自定义事件调用
     });
   });
 })(jQuery);

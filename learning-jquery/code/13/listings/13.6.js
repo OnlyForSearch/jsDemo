@@ -52,7 +52,7 @@ $(document).ready(function() {
       data: {
         title: $('#title').val()
       },
-      timeout: 15000,
+      timeout: 15000,//设置超时15秒
       success: response,
       error: function() {
         $response.html(failed);
