@@ -10,7 +10,7 @@ $(document).ready(function() {
   $('#switcher-default').addClass('selected');
 
   $('#switcher').on('click', 'button', function() {
-    var bodyClass = event.target.id.split('-')[1];
+    var bodyClass = event.target.id.split('-')[1];//使用了内置的事件委托
 
     $('body').removeClass().addClass(bodyClass);
 
