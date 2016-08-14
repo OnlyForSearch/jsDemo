@@ -33,12 +33,12 @@ $(document).ready(function() {
   });
 
   $('div.label').click(function() {
-    var paraWidth = $('div.speech p').outerWidth();
+    var paraWidth = $('div.speech p').outerWidth();//outerWidth计算宽度,内边距和边框宽度
     var $switcher = $(this).parent();
     var switcherWidth = $switcher.outerWidth();
     $switcher.animate({
       borderWidth: '5px',
-      left: paraWidth - switcherWidth,
+      left: paraWidth - switcherWidth,//不指定默认以px结尾
       height: '+=20px'
     }, 'slow');
   });
