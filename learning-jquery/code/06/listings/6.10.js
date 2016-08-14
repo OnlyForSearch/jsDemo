@@ -70,9 +70,9 @@ $(document).ready(function() {
   });
 
   $('#letter-e a').click(function(event) {
-    event.preventDefault();
+    event.preventDefault();///防止点击的链接的时候打开新的eURL
     var requestData = {term: $(this).text()};
-    $.get('e.php', requestData, function(data) {
+    $.get('e.php', requestData, function(data) {//get请求
       $('#dictionary').html(data);
     });
   });

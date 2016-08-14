@@ -9,8 +9,8 @@
   $.sum()
   Return the total of the numeric values in an array/object.
 ******************************************************************************/
-(function($) {
-  $.sum = function(array) {
+(function($) {//在插件中使用$别名立即调用函数表达式IIFE
+  $.sum = function(array) {//添加了全局函数
     // Code goes here
   };
 })(jQuery);

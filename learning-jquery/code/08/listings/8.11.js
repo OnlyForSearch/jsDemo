@@ -56,7 +56,7 @@
   Create a shadow effect on any element by brute-force copying.
 ******************************************************************************/
 (function($) {
-  $.fn.shadow = function() {
+  $.fn.shadow = function() {//为一个元素框加投影的插件方法
     return this.each(function() {
       var $originalElement = $(this);
       for (var i = 0; i < 5; i++) {
@@ -101,5 +101,5 @@ $(document).ready(function() {
     $('tr').swapClass('one', 'two');
   });
 
-  $('h1').shadow();
+  $('h1').shadow();//使用插件
 });

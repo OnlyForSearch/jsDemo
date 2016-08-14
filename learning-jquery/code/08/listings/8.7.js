@@ -10,7 +10,7 @@
   Return the total of the numeric values in an array/object.
 ******************************************************************************/
 (function($) {
-  $.mathUtils = {
+  $.mathUtils = {//使用命名空间隔离函数,,避免定义两个相同的函数名,避免冲突
     sum: function(array) {
       var total = 0;
 
@@ -47,7 +47,7 @@ $(document).ready(function() {
     return $(qty).text();
   }).get();
 
-  var sum = $.mathUtils.sum(quantities);
+  var sum = $.mathUtils.sum(quantities);//使用的时候就得加上插件的名字了
   var average = $.mathUtils.average(prices);
   $('#sum').find('td:nth-child(2)').text(sum);
   $('#average').find('td:nth-child(3)').text(average.toFixed(2));

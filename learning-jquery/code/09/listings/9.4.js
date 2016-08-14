@@ -11,7 +11,7 @@
 ******************************************************************************/
 
 $(document).ready(function() {
-  $('#news tr:nth-child(even)').addClass('alt');
+  $('#news tr:nth-child(even)').addClass('alt');//增加条纹效果
 
   $('#topics a').click(function(event) {
     event.preventDefault();

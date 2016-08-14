@@ -100,7 +100,7 @@ $(document).ready(function() {
     $loading.hide();
   });
 
-  $('body').on('click', 'h3.term', function() {
+  $('body').on('click', 'h3.term', function() {//事件委托
     $(this).siblings('.definition').slideToggle();
   });
 });

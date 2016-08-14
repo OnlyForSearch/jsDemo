@@ -56,7 +56,7 @@
   Create a shadow effect on any element by brute-force copying.
 ******************************************************************************/
 (function($) {
-  $.fn.shadow = function(options) {
+  $.fn.shadow = function(options) {//对象作为方法的参数,会为每个参数提供一个有用的标签,同时也会让参数次序变的无关紧要
     return this.each(function() {
       var $originalElement = $(this);
       for (var i = 0; i < options.copies; i++) {

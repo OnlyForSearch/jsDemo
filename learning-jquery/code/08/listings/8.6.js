@@ -10,7 +10,7 @@
   Return the total of the numeric values in an array/object.
 ******************************************************************************/
 (function($) {
-  $.extend({
+  $.extend({// 使用$.extend()另一种语法定义全局函数,如果原来有相同的属性,就会替换原来的属性
     sum: function(array) {
       var total = 0;
 

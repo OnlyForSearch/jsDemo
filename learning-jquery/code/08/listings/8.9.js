@@ -38,8 +38,8 @@
 ******************************************************************************/
 (function($) {
   $.fn.swapClass = function(class1, class2) {
-    this.each(function() {
-      var $element = $(this);
+    this.each(function() {//这里的this引用的是jquery对象
+      var $element = $(this);//each()方法里面的this应用的是一个DOM对象
       if ($element.hasClass(class1)) {
         $element.removeClass(class1).addClass(class2);
       }

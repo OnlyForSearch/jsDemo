@@ -35,7 +35,7 @@ $(document).ready(function() {
     event.preventDefault();
     $.getScript('c.js');
   });
-
+/*遍历XML文档的方式同HTML文档一样*/
   $('#letter-d a').click(function(event) {
     event.preventDefault();
     $.get('d.xml', function(data) {

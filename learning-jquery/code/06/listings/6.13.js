@@ -77,7 +77,7 @@ $(document).ready(function() {
 
   $('#letter-f form').submit(function(event) {
     event.preventDefault();
-    $.get('f.php', {'term': $('input[name="term"]').val()}, function(data) {
+    $.get('f.php', {'term': $('input[name="term"]').val()}, function(data) {//序列化表单
         $('#dictionary').html(data);
     });
   });

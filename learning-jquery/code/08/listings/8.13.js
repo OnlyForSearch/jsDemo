@@ -57,11 +57,11 @@
 ******************************************************************************/
 (function($) {
   $.fn.shadow = function(opts) {
-    var defaults = {
+    var defaults = {//设置一组默认参数
       copies: 5,
       opacity: 0.1
     };
-    var options = $.extend(defaults, opts);
+    var options = $.extend(defaults, opts);//extend()函数接受opts对象参数覆盖default中的选项,,并保持选项对象中未指定的默认项不变
 
     return this.each(function() {
       var $originalElement = $(this);

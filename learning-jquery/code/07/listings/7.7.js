@@ -4,7 +4,7 @@ $(document).ready(function() {
     speed: 200,
     pause: true
   });
-  if ( $.cookie('cyclePaused') ) {
+  if ( $.cookie('cyclePaused') ) {//使用Cookie插件
     $books.cycle('pause');
   }
   var $controls = $('<div id="books-controls"></div>').insertAfter($books);

@@ -38,7 +38,7 @@
 ******************************************************************************/
 (function($) {
   $.fn.swapClass = function(class1, class2) {
-    return this.each(function() {
+    return this.each(function() {//方法连缀:return返回一个jQuery对象
       var $element = $(this);
       if ($element.hasClass(class1)) {
         $element.removeClass(class1).addClass(class2);

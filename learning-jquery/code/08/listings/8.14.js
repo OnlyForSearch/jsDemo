@@ -60,7 +60,7 @@
     var defaults = {
       copies: 5,
       opacity: 0.1,
-      copyOffset: function(index) {
+      copyOffset: function(index) {//回调函数
         return {x: index, y: index};
       }
     };
@@ -69,7 +69,7 @@
     return this.each(function() {
       var $originalElement = $(this);
       for (var i = 0; i < options.copies; i++) {
-        var offset = options.copyOffset(i);
+        var offset = options.copyOffset(i);//使用回调函数
         $originalElement
           .clone()
           .css({
@@ -112,7 +112,7 @@ $(document).ready(function() {
   });
 
   $('h1').shadow({
-    copyOffset: function(index) {
+    copyOffset: function(index) {//覆盖回调函数
       return {x: -index, y: -2 * index};
     }
   });

@@ -77,7 +77,7 @@ $(document).ready(function() {
 
   $('#letter-f form').submit(function(event) {
     event.preventDefault();
-    var formValues = $(this).serialize();/*随着表单变得更复杂，这种方法也会明显变得缺乏扩展性。好在，
+    var formValues = $(this).serialize();/*//序列化表单:随着表单变得更复杂，这种方法也会明显变得缺乏扩展性。好在，
      jQuery为这种常用的操作提供了一种简化方式——.serialize()方法。这个方法作用于一个
      jQuery 对 象 ， 将 匹 配 的 DOM 元 素 转 换 成 能 够 随 Ajax 请 求 传 递 的 查 询 字 符 串*/
     $.get('f.php', formValues, function(data) {

@@ -82,7 +82,7 @@ $(document).ready(function() {
       $('#dictionary').html(data);
     });
   });
-/*好的！我们的加载反馈系统已经就位了。*/
+/*好的！我们的加载反馈系统已经就位了。依照渐进增强原则,没有HTML标记直接放进也买年中,因为这段信息只能在javascript有效的情况下使用*/
   var $loading = $('<div id="loading">Loading...</div>')
     .insertBefore('#dictionary');
 

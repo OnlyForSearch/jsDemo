@@ -79,7 +79,7 @@ $(document).ready(function() {
     }).fail(function(jqXHR) {/*单击字母E开头的任何链接都会产生一个错误，如图6-12所示。根据服务器的配置不
      同， jqXHR.responseText的内容可能会有所不同。*/
       $('#dictionary')
-      .html('Sorry, but an error occurred: ' + jqXHR.status)
+      .html('Sorry, but an error occurred: ' + jqXHR.status)/*服务器返回的状态码*/
       .append(jqXHR.responseText);
     });
   });

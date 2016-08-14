@@ -57,7 +57,8 @@
 ******************************************************************************/
 (function($) {
   $.fn.shadow = function(opts) {
-    var options = $.extend({}, $.fn.shadow.defaults, opts);
+      //默认值被放在了投影插件的命名空间里可以使用 $.fn.shadow.defaults直接引用//
+    var options = $.extend({}, $.fn.shadow.defaults, opts);//因为不能让$.extend()修改它,所以把它放进一个空对象({})中最为$.extend()的第一个参数,让这个对象成为被修改的目标
 
     return this.each(function() {
       var $originalElement = $(this);
@@ -78,7 +79,7 @@
     });
   };
 
-  $.fn.shadow.defaults = {
+  $.fn.shadow.defaults = { //默认值被放在了投影插件的命名空间里可以使用
     copies: 5,
     opacity: 0.1,
     copyOffset: function(index) {
@@ -112,7 +113,7 @@ $(document).ready(function() {
     $('tr').swapClass('one', 'two');
   });
 
-  $.fn.shadow.defaults.copies = 10;
+  $.fn.shadow.defaults.copies = 10;//修改默认,可以被后续对shadow的调用共享,
   $('h1').shadow({
     copyOffset: function(index) {
       return {x: -index, y: index};
