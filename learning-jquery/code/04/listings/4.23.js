@@ -47,9 +47,9 @@ $(document).ready(function() {
       })
       .fadeTo('slow', 1.0)
       .slideUp('slow')
-      .queue(function(next) {
+      .queue(function(next) {//添加队列效果
         $switcher.css({backgroundColor: '#f00'});
-        next();
+        next();//next()方法可以让队列在中断的地方再接继续起来,不使用next()方法,动画就会中断
       })
       .slideDown('slow');
   });

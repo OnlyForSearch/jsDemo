@@ -57,7 +57,7 @@ $(document).ready(function() {
   $('p').eq(2)
     .css('border', '1px solid #333')
     .click(function() {
-      var $clickedItem = $(this);
+      var $clickedItem = $(this);//把变量存储起来这样无论回调函数外部还是内部都可以引用的到
       $clickedItem.next().slideDown('slow', function() {
         $clickedItem.slideUp('slow');
       });

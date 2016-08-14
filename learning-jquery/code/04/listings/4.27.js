@@ -47,7 +47,7 @@ $(document).ready(function() {
       })
       .fadeTo('slow', 1.0)
       .slideUp('slow', function() {
-        $switcher.css({backgroundColor: '#f00'});
+        $switcher.css({backgroundColor: '#f00'});//使用回调函数,就不是queue()时,不必在回调中调用next()
       })
       .slideDown('slow');
   });

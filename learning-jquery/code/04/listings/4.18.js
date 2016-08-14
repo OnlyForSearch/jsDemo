@@ -37,7 +37,7 @@ $(document).ready(function() {
     var $switcher = $(this).parent();
     var switcherWidth = $switcher.outerWidth();
     $switcher
-      .css({position: 'relative'})
+      .css({position: 'relative'})//只有在relative和absolute情况下left属性才有作用
       .animate({left: paraWidth - switcherWidth}, 'slow')
       .animate({height: '+=20px'}, 'slow')
       .animate({borderWidth: '5px'}, 'slow');
