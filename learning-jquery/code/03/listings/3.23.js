@@ -14,7 +14,7 @@ $(document).ready(function() {
   };
 
   $('#switcher').on('click', toggleSwitcher);
-  $('#switcher').trigger('click');
+  $('#switcher').trigger('click');//模拟用户操作,实现优雅的降级
 
   $('#switcher button').click(function() {
     $('#switcher').off('click', toggleSwitcher);
